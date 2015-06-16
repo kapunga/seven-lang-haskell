@@ -3,15 +3,12 @@ module Main where
     flatExcl :: [(String, String)] -> [String]
     flatExcl x = fst (unzip x) ++ snd (unzip x)
     
-    setifyImpl :: [String] -> [String] -> [String]
-    setifyImpl [] y     = y
-    setifyImpl (x:xs) y = if (x `elem` y) then setifyImpl xs y else setifyImpl xs (y ++ [x]) 
+    setify :: [String] -> [String] -> [String]
+    setify [] y     = y
+    setify (x:xs) y = if (x `elem` y) then setify xs y else setify xs (y ++ [x]) 
     
-    setify :: [String] -> [String]
-    setify x = setifyImpl x []
-
     exclusions :: String -> [(String, String)] -> [String]
-    exclusions x l = filter (\p -> p /= x) (setify (flatExcl [y | y <- l, (fst y) == x || (snd y == x)]))
+    exclusions x l = filter (\p -> p /= x) (setify (flatExcl [y | y <- l, (fst y) == x || (snd y == x)]) [])
 
     -- The bug is in here!
     filterExcl :: [String] -> [(String, Int)] -> [(String, Int)]
